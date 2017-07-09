@@ -35,17 +35,15 @@ def build_part1_RNN(window_size):
 
 ### TODO: return the text input with only ascii lowercase and the punctuation given below included.
 def cleaned_text(text):
-	# regard any punctuation as normal. 
-	punctuation = ['!', ',', '.', ':', ';', '?']
+	punctuation = ['!', ',', '.', ':', ';', '?', ' ']
+	alphabet = list("abcdefghijklmnopqrstuvwxyz")
+	for c in set(text):
+		if c not in punctuation + alphabet:
+			text = text.replace(c, '')
 
 	# 561688 index is where story ends and postface start.
 	text = text[:561688]
-
-	# All variations of alphabet is replaced by origin.
-	text = text.replace('à', 'a')
-	text = text.replace('â', 'a')
-	text = text.replace('è', 'e')
-	text = text.replace('é', 'e')
+    
 	return text
 
 ### TODO: fill out the function below that transforms the input text and window-size into a set of input/output pairs for use with our RNN model
@@ -54,8 +52,8 @@ def window_transform_text(text, window_size, step_size):
     text_idx = np.arange(len(text)-window_size)
     iterator = text_idx[text_idx % step_size == 0]
 
-    inputs = [text[i:i+window_size] for i in range(len(text)-window_size)]
-    outputs = [text[i+window_size] for i in range(len(text)-window_size)]
+    inputs = [text[i:i+window_size] for i in iterator]
+    outputs = [text[i+window_size] for i in iterator]
 
     return inputs,outputs
 
